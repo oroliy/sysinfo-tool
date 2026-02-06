@@ -18,13 +18,13 @@ A lightweight system information tool inspired by [bench.sh](https://github.com/
 Run with one command:
 
 ```bash
-curl -fsSL https://your-domain.com | bash
+curl -fsSL https://oroliy.github.io/sysinfo-tool/install.sh | bash
 ```
 
 Or:
 
 ```bash
-wget -qO- https://your-domain.com | bash
+wget -qO- https://oroliy.github.io/sysinfo-tool/install.sh | bash
 ```
 
 ## Manual Download
@@ -60,16 +60,26 @@ sysinfo-tool/
 
 ## Deployment
 
-### GitHub + Cloudflare Pages
+### GitHub Pages (Recommended)
+
+This repository is configured to automatically deploy to GitHub Pages via GitHub Actions.
 
 1. Fork this repository
-2. Create a new project in Cloudflare Pages
-3. Connect your GitHub repository
-4. Configure build settings:
-   - Build command: (leave empty)
-   - Build output directory: `public`
-5. Update `public/_redirects` with your GitHub username (change `oroliy` to your username)
-6. Deploy and bind your custom domain
+2. Go to Settings > Pages
+3. Source: GitHub Actions
+4. The workflow will automatically deploy on push
+
+### Fork Your Own
+
+To deploy your own copy:
+
+1. Fork this repository
+2. Edit `public/install.sh` and replace `oroliy` with your username
+3. Edit `public/index.html` and update the redirect URLs
+4. Enable GitHub Pages in repository settings
+5. GitHub Actions will automatically deploy your site
+
+Your URL will be: `https://YOUR_USERNAME.github.io/sysinfo-tool/install.sh`
 
 ## License
 
