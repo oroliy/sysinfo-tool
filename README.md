@@ -30,7 +30,7 @@ wget -qO- https://your-domain.com | bash
 ## Manual Download
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/[username]/sysinfo-tool/main/script/sysinfo.sh -o sysinfo.sh
+curl -fsSL https://raw.githubusercontent.com/oroliy/sysinfo-tool/main/script/sysinfo.sh -o sysinfo.sh
 chmod +x sysinfo.sh
 ./sysinfo.sh
 ```
@@ -68,7 +68,7 @@ sysinfo-tool/
 4. Configure build settings:
    - Build command: (leave empty)
    - Build output directory: `public`
-5. Update `public/_redirects` with your GitHub username
+5. Update `public/_redirects` with your GitHub username (change `oroliy` to your username)
 6. Deploy and bind your custom domain
 
 ## License

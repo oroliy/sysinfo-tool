@@ -251,7 +251,7 @@ main() {
     get_ipv6_status
     echo ""
     echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${PLAIN}"
-    echo -e "${GREEN}║  ${BLUE}Get more info: https://github.com/username/sysinfo-tool${GREEN}  ║${PLAIN}"
+    echo -e "${GREEN}║  ${BLUE}Get more info: https://github.com/oroliy/sysinfo-tool${GREEN}  ║${PLAIN}"
     echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${PLAIN}"
 }
 
