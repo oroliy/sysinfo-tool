@@ -2,6 +2,8 @@
 
 A lightweight system information tool inspired by [bench.sh](https://github.com/llitfkitfb/bench.sh), focusing on essential system metrics without network speed testing.
 
+🌐 GitHub Pages: https://oroliy.github.io/sysinfo-tool/
+
 ## Features
 
 - **CPU Information**: Model, cores, and frequency
