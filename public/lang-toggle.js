@@ -1,37 +1,72 @@
 (() => {
-    const subtitle = document.getElementById('subtitle');
-    const description = document.getElementById('description');
+    const eyebrow = document.getElementById('eyebrow');
+    const heroTitle = document.getElementById('hero-title');
+    const heroDescription = document.getElementById('hero-description');
+    const chipOne = document.getElementById('chip-one');
+    const chipTwo = document.getElementById('chip-two');
+    const chipThree = document.getElementById('chip-three');
     const runText = document.getElementById('run-text');
     const downloadBtn = document.getElementById('download-btn');
+    const downloadMeta = document.getElementById('download-meta');
+    const previewLabel = document.getElementById('preview-label');
+    const previewNote = document.getElementById('preview-note');
+    const statOneValue = document.getElementById('stat-one-value');
+    const statOneLabel = document.getElementById('stat-one-label');
+    const statTwoValue = document.getElementById('stat-two-value');
+    const statTwoLabel = document.getElementById('stat-two-label');
     const toggleButton = document.getElementById('lang-toggle');
     const copyBtn = document.getElementById('copy-btn');
     const copyStatus = document.getElementById('copy-status');
     const installCommand = document.getElementById('install-command');
 
     if (
-        !subtitle || !description || !runText || !downloadBtn || !toggleButton ||
-        !copyBtn || !copyStatus || !installCommand
+        !eyebrow || !heroTitle || !heroDescription || !chipOne || !chipTwo ||
+        !chipThree || !runText || !downloadBtn || !downloadMeta || !previewLabel ||
+        !previewNote || !statOneValue || !statOneLabel || !statTwoValue ||
+        !statTwoLabel || !toggleButton || !copyBtn || !copyStatus || !installCommand
     ) {
         return;
     }
 
     const translations = {
         en: {
-            subtitle: 'A lightweight system information tool',
-            description: 'Use the button below to view or download the script.',
+            eyebrow: 'Fast host diagnostics',
+            heroTitle: 'Lightweight system facts, ready in one command.',
+            heroDescription: 'A clean host snapshot for CPU, memory, disk, uptime, virtualization, and connectivity, without the usual benchmark noise.',
+            chipOne: 'No benchmark clutter',
+            chipTwo: 'Readable in seconds',
+            chipThree: 'Shell-first workflow',
+            runText: 'Install',
             button: 'Download Script',
-            runText: 'Run with one command:',
+            downloadMeta: 'MIT licensed, curl or wget install',
+            previewLabel: 'Output preview',
+            previewNote: 'The page centers the install command first, with a compact output panel to show what the script is for before users download it.',
+            statOneValue: 'CPU',
+            statOneLabel: 'Model, cores, and frequency',
+            statTwoValue: 'Disk',
+            statTwoLabel: 'Accurate storage and uptime context',
             toggleText: '中文',
-            toggleLabel: '切换到中文',
+            toggleLabel: 'Switch language to Chinese',
             copyIdle: 'Copy',
             copySuccess: 'Copied',
             copyError: 'Copy failed'
         },
         zh: {
-            subtitle: '一个轻量级的系统信息工具',
-            description: '使用下面的按钮查看或下载脚本。',
+            eyebrow: '快速主机诊断',
+            heroTitle: '一条命令，拿到关键系统信息。',
+            heroDescription: '快速查看 CPU、内存、磁盘、运行时长、虚拟化和网络连通性，不夹带冗余跑分信息。',
+            chipOne: '没有跑分噪音',
+            chipTwo: '几秒内读懂',
+            chipThree: '面向 shell 工作流',
+            runText: '安装命令',
             button: '下载脚本',
-            runText: '一条命令即可运行：',
+            downloadMeta: 'MIT 许可，支持 curl 或 wget 安装',
+            previewLabel: '输出预览',
+            previewNote: '页面把安装命令放在视觉中心，同时用右侧预览面板快速说明脚本能提供什么信息。',
+            statOneValue: 'CPU',
+            statOneLabel: '型号、核心数与频率',
+            statTwoValue: '磁盘',
+            statTwoLabel: '准确展示存储与运行时间上下文',
             toggleText: 'English',
             toggleLabel: 'Switch language to English',
             copyIdle: '复制',
@@ -65,7 +100,7 @@
         if (saved === 'en' || saved === 'zh') {
             return saved;
         }
-        return navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+        return 'en';
     };
 
     const setCopyState = (stateKey) => {
@@ -78,10 +113,21 @@
         const text = translations[lang];
         currentLanguage = lang;
         document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-        subtitle.textContent = text.subtitle;
-        description.textContent = text.description;
-        downloadBtn.textContent = text.button;
+        eyebrow.textContent = text.eyebrow;
+        heroTitle.textContent = text.heroTitle;
+        heroDescription.textContent = text.heroDescription;
+        chipOne.textContent = text.chipOne;
+        chipTwo.textContent = text.chipTwo;
+        chipThree.textContent = text.chipThree;
         runText.textContent = text.runText;
+        downloadBtn.textContent = text.button;
+        downloadMeta.textContent = text.downloadMeta;
+        previewLabel.textContent = text.previewLabel;
+        previewNote.textContent = text.previewNote;
+        statOneValue.textContent = text.statOneValue;
+        statOneLabel.textContent = text.statOneLabel;
+        statTwoValue.textContent = text.statTwoValue;
+        statTwoLabel.textContent = text.statTwoLabel;
         toggleButton.textContent = text.toggleText;
         toggleButton.setAttribute('aria-label', text.toggleLabel);
         setCopyState('copyIdle');
