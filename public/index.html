@@ -27,6 +27,28 @@
             border-radius: 4px;
             font-family: 'Monaco', 'Menlo', monospace;
         }
+        .command-wrapper {
+            margin-top: 30px;
+            font-size: 14px;
+        }
+        .command-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .copy-btn {
+            border: 1px solid #d0d7de;
+            background: #fff;
+            color: #24292f;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .copy-btn:hover {
+            background: #f6f8fa;
+        }
         .btn {
             display: inline-block;
             margin-top: 20px;
@@ -46,10 +68,29 @@
         <p>A lightweight system information tool</p>
         <p>Use the button below to view or download the script.</p>
         <a href="https://raw.githubusercontent.com/oroliy/sysinfo-tool/main/script/sysinfo.sh" class="btn">Download Script</a>
-        <p style="margin-top: 30px; font-size: 14px;">
-            Run with one command:<br>
-            <code>curl -fsSL https://oroliy.github.io/sysinfo-tool/install.sh | bash</code>
-        </p>
+        <div class="command-wrapper">
+            <p>Run with one command:</p>
+            <div class="command-row">
+                <code id="install-command">curl -fsSL https://oroliy.github.io/sysinfo-tool/install.sh | bash</code>
+                <button class="copy-btn" id="copy-btn" type="button">复制</button>
+            </div>
+        </div>
     </div>
+    <script>
+        const copyBtn = document.getElementById('copy-btn');
+        const commandText = document.getElementById('install-command').textContent;
+
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(commandText);
+                copyBtn.textContent = '已复制';
+                setTimeout(() => {
+                    copyBtn.textContent = '复制';
+                }, 1500);
+            } catch (err) {
+                copyBtn.textContent = '复制失败';
+            }
+        });
+    </script>
 </body>
 </html>
