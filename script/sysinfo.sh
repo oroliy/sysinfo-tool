@@ -112,7 +112,7 @@ get_disk_info() {
     local disk_info=""
 
     if command -v df &> /dev/null; then
-        disk_info=$(df -h -x squashfs -x tmpfs -x devtmpfs 2>/dev/null | awk 'NR>1 {used+=$3; total+=$2} END {if(total>0) printf "%.2f GB / %.2f GB", used/1024/1024, total/1024/1024; else print "N/A"}')
+        disk_info=$(df -B1 -x squashfs -x tmpfs -x devtmpfs 2>/dev/null | awk 'NR>1 {used+=$3; total+=$2} END {if(total>0) printf "%.2f GB / %.2f GB", used/1024/1024/1024, total/1024/1024/1024; else print "N/A"}')
     fi
 
     print_kv "disk" "${disk_info}"
