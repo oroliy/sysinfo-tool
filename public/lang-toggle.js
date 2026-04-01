@@ -1,21 +1,10 @@
 (() => {
-    const container = document.querySelector('.container');
-    if (!container) return;
-
-    const toggleButton = document.createElement('button');
-    toggleButton.id = 'lang-toggle';
-    toggleButton.className = 'lang-toggle';
-    toggleButton.type = 'button';
-    toggleButton.setAttribute('aria-label', 'Switch language');
-    toggleButton.textContent = '中文';
-    container.prepend(toggleButton);
-
-    const paragraphs = container.querySelectorAll('p');
-    const subtitle = paragraphs[0];
-    const description = paragraphs[1];
-    const runText = paragraphs[2]?.childNodes[0];
-    const downloadBtn = container.querySelector('a.btn');
-    if (!subtitle || !description || !runText || !downloadBtn) return;
+    const subtitle = document.getElementById('subtitle');
+    const description = document.getElementById('description');
+    const runText = document.getElementById('run-text');
+    const downloadBtn = document.getElementById('download-btn');
+    const toggleButton = document.getElementById('lang-toggle');
+    if (!subtitle || !description || !runText || !downloadBtn || !toggleButton) return;
 
     const translations = {
         en: {
@@ -62,7 +51,7 @@
         subtitle.textContent = text.subtitle;
         description.textContent = text.description;
         downloadBtn.textContent = text.button;
-        runText.textContent = `${text.runText}`;
+        runText.textContent = text.runText;
         toggleButton.textContent = text.toggleText;
         safeStorageSet('sysinfo_lang', lang);
     };

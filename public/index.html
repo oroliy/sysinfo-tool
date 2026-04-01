@@ -59,12 +59,13 @@
 </head>
 <body>
     <div class="container">
+        <button id="lang-toggle" class="lang-toggle" type="button" aria-label="Switch language">中文</button>
         <h1>sysinfo.sh</h1>
-        <p>A lightweight system information tool</p>
-        <p>Use the button below to view or download the script.</p>
-        <a href="https://raw.githubusercontent.com/oroliy/sysinfo-tool/main/script/sysinfo.sh" class="btn">Download Script</a>
+        <p id="subtitle">A lightweight system information tool</p>
+        <p id="description">Use the button below to view or download the script.</p>
+        <a id="download-btn" href="https://raw.githubusercontent.com/oroliy/sysinfo-tool/main/script/sysinfo.sh" class="btn">Download Script</a>
         <p style="margin-top: 30px; font-size: 14px;">
-            Run with one command:<br>
+            <span id="run-text">Run with one command:</span><br>
             <code>curl -fsSL https://oroliy.github.io/sysinfo-tool/install.sh | bash</code>
         </p>
     </div>
