@@ -2,20 +2,27 @@
 # sysinfo.sh - Lightweight System Information Tool
 # Inspired by bench.sh but without network speed testing
 
-# Color codes
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-BLUE='\033[0;36m'
-PLAIN='\033[0m'
+# Color palette
+RESET='\033[0m'
+BOLD='\033[1m'
+DIM='\033[2m'
+RED='\033[38;5;203m'
+GREEN='\033[38;5;114m'
+YELLOW='\033[38;5;221m'
+BLUE='\033[38;5;81m'
+MAGENTA='\033[38;5;213m'
+CYAN='\033[38;5;117m'
+WHITE='\033[38;5;255m'
 
-# Print header
-print_header() {
-    clear
-    echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${PLAIN}"
-    echo -e "${GREEN}║           ${YELLOW}System Information Tool${GREEN}                    ║${PLAIN}"
-    echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${PLAIN}"
-    echo ""
+# Render helpers
+print_kv() {
+    local key="$1"
+    local value="$2"
+    printf "  ${CYAN}%-12s${RESET} %b\n" "${key}" "${value}"
+}
+
+print_divider() {
+    printf "  ${DIM}────────────────────────────────────────────${RESET}\n"
 }
 
 # Get CPU information
@@ -52,9 +59,9 @@ get_cpu_info() {
         fi
     fi
 
-    echo -e "${YELLOW}CPU Model:${PLAIN}     ${cpu_model:-Unknown}"
-    echo -e "${YELLOW}CPU Cores:${PLAIN}     ${cpu_cores:-N/A}"
-    echo -e "${YELLOW}CPU Frequency:${PLAIN} ${cpu_freq}"
+    print_kv "cpu" "${cpu_model:-Unknown}"
+    print_kv "cores" "${cpu_cores:-N/A}"
+    print_kv "freq" "${cpu_freq}"
 }
 
 # Get memory information
@@ -82,8 +89,8 @@ get_memory_info() {
         swap_total_gb=$(awk "BEGIN {printf \"%.2f\", $swap_total/1024/1024}")
         swap_used_gb=$(awk "BEGIN {printf \"%.2f\", $swap_used/1024/1024}")
 
-        echo -e "${YELLOW}Memory:${PLAIN}        ${mem_used_gb} GB / ${mem_total_gb} GB"
-        echo -e "${YELLOW}Swap:${PLAIN}          ${swap_used_gb} GB / ${swap_total_gb} GB"
+        print_kv "memory" "${mem_used_gb} GB / ${mem_total_gb} GB"
+        print_kv "swap" "${swap_used_gb} GB / ${swap_total_gb} GB"
     elif command -v sysctl &> /dev/null; then
         # macOS fallback
         local mem_pages mem_free_pages
@@ -92,11 +99,11 @@ get_memory_info() {
         mem_free_pages=$(vm_stat | head -2 | tail -1 | awk '{print $3}' | sed 's/\.//')
         mem_used=$(awk "BEGIN {printf \"%.2f\", ($mem_pages/4096 - $mem_free_pages) * 4096 / 1024 / 1024 / 1024}")
 
-        echo -e "${YELLOW}Memory:${PLAIN}        ${mem_used} GB / ${mem_total} GB"
-        echo -e "${YELLOW}Swap:${PLAIN}          N/A"
+        print_kv "memory" "${mem_used} GB / ${mem_total} GB"
+        print_kv "swap" "N/A"
     else
-        echo -e "${YELLOW}Memory:${PLAIN}        N/A"
-        echo -e "${YELLOW}Swap:${PLAIN}          N/A"
+        print_kv "memory" "N/A"
+        print_kv "swap" "N/A"
     fi
 }
 
@@ -108,7 +115,7 @@ get_disk_info() {
         disk_info=$(df -h -x squashfs -x tmpfs -x devtmpfs 2>/dev/null | awk 'NR>1 {used+=$3; total+=$2} END {if(total>0) printf "%.2f GB / %.2f GB", used/1024/1024, total/1024/1024; else print "N/A"}')
     fi
 
-    echo -e "${YELLOW}Disk:${PLAIN}          ${disk_info}"
+    print_kv "disk" "${disk_info}"
 }
 
 # Get OS information
@@ -133,9 +140,9 @@ get_os_info() {
     kernel=$(uname -r)
     arch=$(uname -m)
 
-    echo -e "${YELLOW}OS:${PLAIN}            ${os_name}"
-    echo -e "${YELLOW}Kernel:${PLAIN}        ${kernel}"
-    echo -e "${YELLOW}Architecture:${PLAIN}  ${arch}"
+    print_kv "os" "${os_name}"
+    print_kv "kernel" "${kernel}"
+    print_kv "arch" "${arch}"
 }
 
 # Get uptime information
@@ -161,7 +168,7 @@ get_uptime_info() {
         uptime_str="N/A"
     fi
 
-    echo -e "${YELLOW}Uptime:${PLAIN}        ${uptime_str}"
+    print_kv "uptime" "${uptime_str}"
 }
 
 # Get load average
@@ -176,7 +183,7 @@ get_load_info() {
         load="N/A"
     fi
 
-    echo -e "${YELLOW}Load Average:${PLAIN}  ${load}"
+    print_kv "load avg" "${load}"
 }
 
 # Get virtualization info
@@ -202,7 +209,7 @@ get_virt_info() {
         virt="None"
     fi
 
-    echo -e "${YELLOW}Virtualization:${PLAIN} ${virt}"
+    print_kv "virt" "${virt}"
 }
 
 # Check IPv4 connectivity
@@ -210,12 +217,12 @@ get_ipv4_status() {
     local status=""
 
     if ping -c 1 -W 2 1.1.1.1 &> /dev/null 2>&1 || ping -c 1 -W 2 8.8.8.8 &> /dev/null 2>&1; then
-        status="${GREEN}Connected${PLAIN}"
+        status="${GREEN}Connected${RESET}"
     else
-        status="${RED}Disconnected${PLAIN}"
+        status="${RED}Disconnected${RESET}"
     fi
 
-    echo -e "${YELLOW}IPv4 Status:${PLAIN}   ${status}"
+    print_kv "ipv4" "${status}"
 }
 
 # Check IPv6 connectivity
@@ -223,36 +230,73 @@ get_ipv6_status() {
     local status=""
 
     if ping6 -c 1 -W 2 2606:4700:4700::1111 &> /dev/null 2>&1 || ping6 -c 1 -W 2 2001:4860:4860::8888 &> /dev/null 2>&1; then
-        status="${GREEN}Connected${PLAIN}"
+        status="${GREEN}Connected${RESET}"
     else
-        status="${RED}Disconnected${PLAIN}"
+        status="${RED}Disconnected${RESET}"
     fi
 
-    echo -e "${YELLOW}IPv6 Status:${PLAIN}   ${status}"
+    print_kv "ipv6" "${status}"
+}
+
+print_modern_view() {
+    local hostname user_name shell_name
+    hostname=$(hostname 2>/dev/null || echo "unknown")
+    user_name=$(whoami 2>/dev/null || echo "user")
+    shell_name=$(basename "${SHELL:-bash}")
+
+    clear
+    echo -e "${BOLD}${MAGENTA}  ${user_name}@${hostname}${RESET}"
+    print_divider
+
+    local -a logo=(
+        "       ${BLUE}___${RESET} "
+        "    ${BLUE}.-\"   \"-.${RESET}"
+        "   ${BLUE}/  .-. .- \\\\${RESET}"
+        "  ${BLUE}|  /   Y   |${RESET}"
+        "   ${BLUE}\\ \\ 0 | 0 /${RESET}"
+        "    ${BLUE}'-\\_v_/-'${RESET}"
+        "      ${BLUE} /   \\ ${RESET}"
+        "      ${BLUE}/_/ \\_\\\\${RESET}"
+    )
+
+    local -a info=(
+        "$(print_kv "tool" "${WHITE}sysinfo-tool${RESET}")"
+        "$(print_kv "style" "neofetch-inspired")"
+        "$(print_kv "shell" "${shell_name}")"
+    )
+
+    for i in "${!logo[@]}"; do
+        if [[ $i -lt ${#info[@]} ]]; then
+            printf "%b  %b\n" "${logo[$i]}" "${info[$i]}"
+        else
+            printf "%b\n" "${logo[$i]}"
+        fi
+    done
+
+    print_divider
 }
 
 # Main function
 main() {
-    print_header
+    print_modern_view
     get_cpu_info
-    echo ""
+    print_divider
     get_memory_info
-    echo ""
+    print_divider
     get_disk_info
-    echo ""
+    print_divider
     get_os_info
-    echo ""
+    print_divider
     get_uptime_info
     get_load_info
-    echo ""
+    print_divider
     get_virt_info
-    echo ""
+    print_divider
     get_ipv4_status
     get_ipv6_status
+    print_divider
+    echo -e "  ${DIM}repo:${RESET} ${BLUE}https://github.com/oroliy/sysinfo-tool${RESET}"
     echo ""
-    echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${PLAIN}"
-    echo -e "${GREEN}║  ${BLUE}Get more info: https://github.com/oroliy/sysinfo-tool${GREEN}  ║${PLAIN}"
-    echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${PLAIN}"
 }
 
 # Run main
