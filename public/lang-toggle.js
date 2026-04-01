@@ -1,4 +1,22 @@
 (() => {
+    const container = document.querySelector('.container');
+    if (!container) return;
+
+    const toggleButton = document.createElement('button');
+    toggleButton.id = 'lang-toggle';
+    toggleButton.className = 'lang-toggle';
+    toggleButton.type = 'button';
+    toggleButton.setAttribute('aria-label', 'Switch language');
+    toggleButton.textContent = '中文';
+    container.prepend(toggleButton);
+
+    const paragraphs = container.querySelectorAll('p');
+    const subtitle = paragraphs[0];
+    const description = paragraphs[1];
+    const runText = paragraphs[2]?.childNodes[0];
+    const downloadBtn = container.querySelector('a.btn');
+    if (!subtitle || !description || !runText || !downloadBtn) return;
+
     const translations = {
         en: {
             subtitle: 'A lightweight system information tool',
@@ -41,16 +59,13 @@
     const applyLanguage = (lang) => {
         const text = translations[lang];
         document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-        document.getElementById('subtitle').textContent = text.subtitle;
-        document.getElementById('description').textContent = text.description;
-        document.getElementById('download-btn').textContent = text.button;
-        document.getElementById('run-text').textContent = text.runText;
-        document.getElementById('lang-toggle').textContent = text.toggleText;
+        subtitle.textContent = text.subtitle;
+        description.textContent = text.description;
+        downloadBtn.textContent = text.button;
+        runText.textContent = `${text.runText}`;
+        toggleButton.textContent = text.toggleText;
         safeStorageSet('sysinfo_lang', lang);
     };
-
-    const toggleButton = document.getElementById('lang-toggle');
-    if (!toggleButton) return;
 
     let currentLanguage = getPreferredLanguage();
     applyLanguage(currentLanguage);
