@@ -188,7 +188,7 @@ get_virt_info() {
         if [[ "$virt" == "none" ]]; then
             virt="None"
         else
-            virt="${virt^}"
+            virt="$(printf "%s" "$virt" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')"
         fi
     elif [[ -d /proc/vz ]]; then
         virt="OpenVZ"
