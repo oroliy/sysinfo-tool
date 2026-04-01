@@ -1,0 +1,53 @@
+name: Test sysinfo.sh
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-script:
+    name: Run on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make script executable
+        run: chmod +x script/sysinfo.sh
+
+      - name: Run sysinfo script and capture output
+        env:
+          TERM: xterm
+        run: |
+          set -euo pipefail
+          ./script/sysinfo.sh | tee sysinfo-output.txt
+
+      - name: Validate expected output sections
+        run: |
+          set -euo pipefail
+          grep -qE "CPU Model:" sysinfo-output.txt
+          grep -qE "Memory:" sysinfo-output.txt
+          grep -qE "Disk:" sysinfo-output.txt
+          grep -qE "OS:" sysinfo-output.txt
+          grep -qE "Uptime:" sysinfo-output.txt
+          grep -qE "Load Average:" sysinfo-output.txt
+          grep -qE "Virtualization:" sysinfo-output.txt
+          grep -qE "IPv4 Status:" sysinfo-output.txt
+          grep -qE "IPv6 Status:" sysinfo-output.txt
+
+      - name: Upload output artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sysinfo-output-${{ matrix.os }}
+          path: sysinfo-output.txt
+          if-no-files-found: error
